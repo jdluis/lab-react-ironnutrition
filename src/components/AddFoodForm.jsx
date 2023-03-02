@@ -1,4 +1,5 @@
-import { Button, Form } from 'antd';
+import { Button, Divider } from 'antd';
+
 import Input from 'antd/es/input/Input';
 import { useState } from 'react';
 
@@ -25,17 +26,18 @@ function AddFoodForm(props) {
   };
 
   const handleSubmitForm = (event) => {
-    console.log(event)
     event.preventDefault();
 
     const newFood = {
-      name: name,
-      image: image,
-      calories: calories,
-      serving: serving,
+      name,
+      image,
+      calories,
+      serving,
     };
 
-    props.addNewExpense(newFood);
+    props.setActualFoods((allFooods => {
+      return [...allFooods, newFood];
+    }));
 
     // limpiamos los campos desdes de crear el expense
     setName('');
@@ -45,73 +47,31 @@ function AddFoodForm(props) {
   };
 
   return (
-    <Form
-      name="basic"
-      labelCol={{
-        span: 8,
-      }}
-      wrapperCol={{
-        span: 16,
-      }}
-      style={{
-        maxWidth: 600,
-      }}
-      initialValues={{
-        remember: true,
-      }}
+    <form
+      style={{ maxWidth: '600px', justifyContent: 'center', margin: 'auto' }}
     >
-      <Form.Item
-        label="name"
-        name="name"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
+      <Divider>Add Food Entry</Divider>
+
+      <label>Name</label>
+      <Input value={name} type="text" onChange={handleNameInput} />
+
+      <label>Image</label>
+      <Input value={image} type="text" onChange={handleImageInput} />
+
+      <label>Calories</label>
+      <Input value={calories} type="number" onChange={handleCaloriesInput} />
+
+      <label>Servings</label>
+      <Input value={serving} type="number" onChange={handleServingInput} />
+
+      <Button
+        style={{ width: '100%' }}
+        onClick={handleSubmitForm}
+        type="primary"
       >
-        <Input value={name} type="text" onChange={handleNameInput} />
-      </Form.Item>
-      <Form.Item
-        label="image"
-        name="image"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
-      >
-        <Input value={image} type="text" onChange={handleImageInput} />
-      </Form.Item>
-      <Form.Item
-        label="calories"
-        name="calories"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
-      >
-        <Input value={calories} type="number" onChange={handleCaloriesInput} />
-      </Form.Item>
-      <Form.Item
-        label="serving"
-        name="serving"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
-      >
-        <Input value={serving} type="number" onChange={handleServingInput} />
-      </Form.Item>
-      <Form.Item>
-        <Button onClick={handleSubmitForm} type="primary">Create</Button>
-      </Form.Item>
-    </Form>
+        Create
+      </Button>
+    </form>
   );
 }
 

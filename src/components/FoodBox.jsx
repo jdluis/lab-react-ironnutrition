@@ -1,20 +1,33 @@
-import { Card } from "antd";
+import { Card, Button, Col } from 'antd';
 
 function FoodBox(props) {
   const { food } = props;
+
+  const handleDeleteFood = (foodName) => {
+    props.setActualFoods((allFoods) => {
+      allFoods.filter((each, index) => {
+        return index !== food.index;
+      })
+    })
+  }
   return (
-    <Card key={food.name}>
-      <img
-        style={{ width: '40px', height: '40px', objectFit: 'contain' }}
-        src={food.image}
-        alt={food.name}
-        width={0}
-      />
+    <Col>
+      <Card title={food.name} style={{ width: 230, height: 300, margin: 10 }}>
+        <img
+          style={{ width: '100px', height: '60px', objectFit: 'contain' }}
+          src={food.image}
+          alt={food.name}
+          width={0}
+        />
 
-      <h3> {food.name} </h3>
-
-      <button>Delete</button>
-    </Card>
+        <p>Calories: {food.calories}</p>
+        <p>Servings: {food.servings}</p>
+        <p>
+          <b>Total Calories: {food.calories * food.servings} </b> kcal
+        </p>
+        <Button onClick={() => handleDeleteFood(food.index)} type="primary">Delete</Button>
+      </Card>
+    </Col>
   );
 }
 

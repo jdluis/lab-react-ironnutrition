@@ -1,5 +1,4 @@
-import { Button, Collapse, Layout, Row } from 'antd';
-import { Content, Header } from 'antd/es/layout/layout';
+import { Button, Collapse, Row, Divider } from 'antd';
 import { useState } from 'react';
 import './App.css';
 import AddFoodForm from './components/AddFoodForm';
@@ -8,64 +7,50 @@ import Search from './components/Search';
 import foods from './foods.json';
 
 function App() {
-  const [actualFoods, setFoods] = useState(foods);
-  const [foodAfterFiltered, setfilterFoods] = useState(foods);
+  const [actualFoods, setActualFoods] = useState(foods);
+  const [search, setSearch] = useState('');
   const [isFormShowing, setIsFormShowing] = useState(false);
 
-  const addNewExpense = (newFood) => {
-    setFoods([...actualFoods, newFood]);
-    setfilterFoods([...foodAfterFiltered, newFood]);
-  };
-
-  const filterFoods = (searchInput) => {
-    const filteredFoods = actualFoods.filter((each) => {
-      let nameMin = each.name.toLowerCase();
-      let searchMin = searchInput.toLowerCase();
-
-      if (nameMin.includes(searchMin)) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
-    setfilterFoods(filteredFoods);
-  };
 
   return (
-    <Layout className="App">
-      <Header>
-        <Button
-          variant="outline-warning"
-          onClick={() => setIsFormShowing(!isFormShowing)}
-        >
-          Ver Formulario
-        </Button>
-        <h1 style={{ color: 'white' }}>Iron Nutricion</h1>
-      </Header>
-      <Content>
-        <Search filterFoods={filterFoods} />
-        <Collapse in={isFormShowing}>
-          <AddFoodForm addNewExpense={addNewExpense} />
-        </Collapse>
+    <div className="App">
+      <Collapse in={isFormShowing}>
+        <AddFoodForm setActualFoods={setActualFoods} />
+      </Collapse>
+      <Button
+        variant="outline-warning"
+        onClick={() => setIsFormShowing(!isFormShowing)}
+      >
+        Ver Formulario
+      </Button>
+      <h1 style={{ color: 'white' }}>Iron Nutricion</h1>
 
-        <Row xs={1} md={2} className="g-4">
-          {actualFoods.map((food) => {
-            return (
-              <FoodBox
-                key={food.name}
-                food={{
-                  name: food.name,
-                  calories: food.calories,
-                  image: food.image,
-                  servings: food.servings,
-                }}
-              />
-            );
-          })}
+      <Search setSearch={setSearch} search={search} />
+
+      <Divider>
+        <Row style={{ width: '100%', justifyContent: 'center' }}>
+          {actualFoods
+            .filter((each) => {
+              return each.name.includes(search);
+            })
+            .map((food, index) => {
+              return (
+                <FoodBox
+                  key={food.name}
+                  setActualFoods={setActualFoods}
+                  food={{
+                    name: food.name,
+                    calories: food.calories,
+                    image: food.image,
+                    servings: food.servings,
+                    index
+                  }}
+                />
+              );
+            })}
         </Row>
-      </Content>
-    </Layout>
+      </Divider>
+    </div>
   );
 }
 
